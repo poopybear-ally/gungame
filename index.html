@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gun Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #game-area {
+            position: relative;
+            width: 80%;
+            height: 500px;
+            background-color: #333;
+            border: 2px solid #fff;
+            overflow: hidden;
+        }
+
+        #gun {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            width: 50px;
+            height: 20px;
+            background-color: #555;
+            border-radius: 5px;
+            transform: translateX(-50%);
+        }
+
+        .target {
+            position: absolute;
+            top: 50%;
+            left: 80%;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            border-radius: 50%;
+            animation: moveTarget 2s linear infinite;
+        }
+
+        @keyframes moveTarget {
+            0% {
+                left: 80%;
+            }
+            50% {
+                left: 10%;
+            }
+            100% {
+                left: 80%;
+            }
+        }
+
+        .bullet {
+            position: absolute;
+            bottom: 40px;
+            width: 5px;
+            height: 10px;
+            background-color: yellow;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-area">
+        <div id="gun"></div>
+        <div id="target" class="target"></div>
+    </div>
+
+    <script>
+        document.addEventListener("click", fireBullet);
+
+        function fireBullet(event) {
+            const gun = document.getElementById('gun');
+            const gameArea = document.getElementById('game-area');
+            const bullet = document.createElement('div');
+            bullet.classList.add('bullet');
+            gameArea.appendChild(bullet);
+
+            // Position bullet based on gun's position
+            const gunPosition = gun.getBoundingClientRect();
+            bullet.style.left = `${gunPosition.left + gunPosition.width / 2 - 2.5}px`;
+
+            // Animate bullet moving up
+            let bulletPosition = gameArea.offsetHeight - 40;
+            let interval = setInterval(() => {
+                if (bulletPosition <= 0) {
+                    clearInterval(interval);
+                    bullet.remove();
+                } else {
+                    bulletPosition -= 5;
+                    bullet.style.bottom = `${bulletPosition}px`;
+                }
+            }, 20);
+        }
+    </script>
+</body>
+</html>
